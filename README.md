@@ -28,13 +28,16 @@ The project demonstrates API functional testing, CRUD operations, authentication
 | PUT | `/booking/{id}` | Fully update a booking |
 | PATCH | `/booking/{id}` | Partially update a booking |
 | DELETE | `/booking/{id}` | Delete a booking |
-| GET | `/booking/{id}` | Verify deleted or non-existent booking returns 404 |
-| POST | `/booking` | Test invalid booking data |
-| POST | `/booking` | Test missing booking fields |
+| GET | `/booking/{id}` | Verify deleted booking returns HTTP 404 |
+| PUT | `/booking/{id}` | Verify unauthorized update returns HTTP 403 |
+| POST | `/booking` | Explore invalid booking data |
+| POST | `/booking` | Explore missing booking fields |
 
-## Automated CRUD Test Flow
+## Automated Test Scenarios
 
-The project includes an automated end-to-end API test flow covering the complete booking lifecycle:
+### 1. Positive CRUD Flow
+
+An automated end-to-end API test flow covering the complete booking lifecycle:
 
 1. **Authentication** — Generate an authentication token.
 2. **Create** — Create a new booking and store its ID.
@@ -44,7 +47,23 @@ The project includes an automated end-to-end API test flow covering the complete
 6. **Delete** — Delete the booking.
 7. **Verify Deletion** — Confirm that the deleted booking returns HTTP 404.
 
-The collection automatically stores and reuses the authentication token and booking ID using Postman environment variables.
+**Execution:** 7 requests, 26 assertions.
+
+### 2. Negative Authentication Tests
+
+An automated negative test scenario verifying that booking updates require authentication:
+
+1. **Create Booking** — Create a booking for negative testing.
+2. **Unauthorized Update** — Attempt to update the booking without an authentication token.
+3. **Verify Rejection** — Assert HTTP 403 and verify the response contains `Forbidden`.
+4. **Generate Token** — Obtain a valid authentication token.
+5. **Cleanup** — Delete the test booking using authorized access.
+
+The scenario uses four API requests and automatically cleans up its test data.
+
+**Execution:** 4 requests, 14 assertions.
+
+Both automated scenarios use Postman environment variables to store and reuse booking IDs and authentication tokens.
 
 ## Automated Validations
 
@@ -57,10 +76,20 @@ The collection automatically stores and reuses the authentication token and book
 - Authentication token handling
 - CRUD workflow verification
 - Verification of deleted resources (HTTP 404)
+- Unauthorized access verification (HTTP 403)
+- Test data cleanup
 
 ## Negative Testing
 
-Exploratory negative tests identified the following API behaviors:
+The project includes automated authentication testing and exploratory negative testing.
+
+**Automated negative testing:**
+
+- Updating a booking without an authentication token returns HTTP 403 Forbidden.
+- The response contains `Forbidden`.
+- Test data is removed after the negative scenario.
+
+**Exploratory observations:**
 
 - Invalid `totalprice` values may be converted to `null` while the booking is created.
 - A missing `firstname` field may result in a booking with an empty string.
@@ -73,30 +102,21 @@ These observations require confirmation against API requirements before being cl
 2. Import the Postman Environment JSON file.
 3. Select the imported environment.
 4. Open the Collection Runner.
-5. Select the **Positive CRUD Flow** folder.
-6. Run the requests in the following order:
-   - POST - Create Token
-   - POST - Create Booking
-   - GET - Booking by ID
-   - PUT - Update Booking
-   - PATCH - Partial Update Booking
-   - DELETE - Delete Booking
-   - GET - Verify Deleted Booking
+5. Select either **Positive CRUD Flow** or **Negative Authentication Tests**.
+6. Run the requests in their predefined order.
 
-The collection automatically manages authentication and booking identifiers throughout the workflow.
-
-Negative tests are designed to explore API behavior and may contain intentionally failing assertions.
+The collection automatically manages authentication and booking identifiers throughout each workflow.
 
 ## Continuous Integration (GitHub Actions)
 
-The project uses **GitHub Actions** to automatically execute API tests.
+The project uses **GitHub Actions** to automatically execute API tests with Newman.
 
 The CI workflow:
 
 - Runs automatically on every push to the repository.
 - Supports manual execution using `workflow_dispatch`.
 - Installs Newman and the HTML Extra Reporter.
-- Executes the `Positive CRUD Flow` folder.
+- Executes both `Positive CRUD Flow` and `Negative Authentication Tests`.
 - Validates API responses using JavaScript assertions.
 - Generates a detailed HTML test report.
 - Uploads the report as a downloadable GitHub Actions artifact.
@@ -111,21 +131,30 @@ The CI workflow:
 
 ## Test Execution Results
 
-The latest verified automated CRUD workflow completed successfully using Newman and GitHub Actions.
+The latest verified automated test execution completed successfully using Newman and GitHub Actions.
+
+| Test Suite | Requests | Assertions | Failed |
+|---|---:|---:|---:|
+| Positive CRUD Flow | 7 | 26 | 0 |
+| Negative Authentication Tests | 4 | 14 | 0 |
+| **Total** | **11** | **40** | **0** |
+
+### Latest CI Execution
 
 | Metric | Result |
 |---|---|
-| API Requests | 7 |
-| Assertions | 26 |
-| Passed | 26 |
+| API Requests | 11 |
+| Assertions | 40 |
+| Passed | 40 |
 | Failed | 0 |
 | Skipped | 0 |
-| Total Execution Time | 286 ms |
-| Average Response Time | 11 ms |
+| Total Execution Time | 615 ms |
+| Average Response Time | 32 ms |
+| Execution Date | October 24, 2026 |
 
-**Result: 26 passed, 0 failed.**
+**Result: 40 passed, 0 failed.**
 
-These results represent a successful execution on October 24, 2026, and do not guarantee future test outcomes.
+These results represent a verified execution and do not guarantee future test outcomes.
 
 ## Author
 
