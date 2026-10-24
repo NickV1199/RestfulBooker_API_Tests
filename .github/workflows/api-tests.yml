@@ -17,11 +17,23 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Install Newman
-        run: npm install -g newman
+      - name: Install Newman and HTML Reporter
+        run: |
+          npm install -g newman newman-reporter-htmlextra
 
       - name: Run Postman API Tests
         run: |
+          mkdir -p reports
           newman run "Restful Booker API Testing.postman_collection.json" \
             -e "Restful Booker - Test.postman_environment.json" \
-            --folder "Positive CRUD Flow"
+            --folder "Positive CRUD Flow" \
+            -r cli,htmlextra \
+            --reporter-htmlextra-export reports/api-test-report.html
+
+      - name: Upload HTML Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-test-report
+          path: reports/api-test-report.html
+          if-no-files-found: warn
