@@ -24,8 +24,4 @@ jobs:
         run: |
           newman run "Restful Booker API Testing.postman_collection.json" \
             -e "Restful Booker - Test.postman_environment.json" \
-            --folder "POST - Create Token" \
-            --folder "POST - Create Booking" \
-            --folder "GET - Booking by ID" \
-            --folder "PUT - Update Booking" \
-            --folder "PATCH - Partial Update Booking"
+            --folder "Positive CRUD Flow"
