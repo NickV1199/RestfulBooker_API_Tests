@@ -1,3 +1,5 @@
+[![Restful Booker API Tests](https://github.com/NickV1199/RestfulBooker_API_Tests/actions/workflows/api-tests.yml/badge.svg)](https://github.com/NickV1199/RestfulBooker_API_Tests/actions/workflows/api-tests.yml)
+
 # Restful Booker API Testing
 
 Automated REST API testing project built with **Postman and JavaScript**, using the public [Restful Booker API](https://restful-booker.herokuapp.com/apidoc/index.html).
