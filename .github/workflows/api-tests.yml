@@ -27,6 +27,7 @@ jobs:
           newman run "Restful Booker API Testing.postman_collection.json" \
             -e "Restful Booker - Test.postman_environment.json" \
             --folder "Positive CRUD Flow" \
+            --folder "Negative Authentication Tests" \
             -r cli,htmlextra \
             --reporter-htmlextra-export reports/api-test-report.html
 
