@@ -1,0 +1,31 @@
+name: Restful Booker API Tests
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  api-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Newman
+        run: npm install -g newman
+
+      - name: Run Postman API Tests
+        run: |
+          newman run "Restful Booker API Testing.postman_collection.json" \
+            -e "Restful Booker - Test.postman_environment.json" \
+            --folder "POST - Create Token" \
+            --folder "POST - Create Booking" \
+            --folder "GET - Booking by ID" \
+            --folder "PUT - Update Booking" \
+            --folder "PATCH - Partial Update Booking"
